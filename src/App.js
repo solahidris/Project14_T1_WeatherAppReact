@@ -26,6 +26,13 @@ function App() {
         <div className="flex justify-center">
           <input type="text" placeholder="city input here" />
         </div>
+
+        <div className="ml-10 mt-10 text-white">
+          <p>https://openweathermap.org/history-bulk</p>
+          <p>https://openweathermap.org/weather-dashboard</p>
+          <p>https://agromonitoring.com/dashboard</p>
+        </div>
+
       </div> 
 
     </div>

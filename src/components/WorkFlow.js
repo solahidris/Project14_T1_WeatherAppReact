@@ -13,7 +13,8 @@ const WorkFlow = () => {
         <p className="line-through">1)create display label</p>
         <p className="line-through">1.5)display label - city name & temp</p>
         <p className="line-through">2)create city name input</p>
-        <p>3)find weather external api</p>
+        <p className="line-through">3)find weather external api</p>
+        <p>3.5) use openweathermap for api</p>
         <p>4)fetch api</p>
         <p>5)connect display to api search key</p>
         <p className="my-2">-----------------------</p>
