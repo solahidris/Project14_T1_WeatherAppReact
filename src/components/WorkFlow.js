@@ -10,9 +10,9 @@ const WorkFlow = () => {
         <p>4)via external api</p>
         <p>-----------</p>
         <p>actual flow</p>
-        <p>1)create display label</p>
-        <p>1.5)display label - city name & temp</p>
-        <p>2)create city name input</p>
+        <p className="line-through">1)create display label</p>
+        <p className="line-through">1.5)display label - city name & temp</p>
+        <p className="line-through">2)create city name input</p>
         <p>3)find weather external api</p>
         <p>4)fetch api</p>
         <p>5)connect display to api search key</p>
