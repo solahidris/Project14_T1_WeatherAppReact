@@ -10,14 +10,14 @@ function App() {
   const weatherAPI = "http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=00141ae9f28c569a9dfeb43dae67a990";
 
   // API Data useState
-  const [data, setData] = useState(null);
+  const [apiData, setApiData] = useState(null);
 
   // API Fetch
   const fetchData = async () => {
     try {
     const response = await fetch(weatherAPI);
     const jsonData = await response.json();
-    setData(jsonData);
+    setApiData(jsonData);
     console.log(jsonData);} catch (error) {
       console.error("Error: ", error);
     }
