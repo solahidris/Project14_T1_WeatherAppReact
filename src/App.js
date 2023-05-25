@@ -1,33 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import AppHeader from "./components/AppHeader";
-import WorkFlow from "./components/WorkFlow";
+// eslint-disable-next-line
+import WorkFlow from "./components/WorkFlow"; // For Self Flow
+import SearchCityButton from "./components/SearchCityButton";
+import CityInputBox from "./components/CityInputBox";
+import WeatherDisplay from "./components/WeatherDisplay";
 
 function App() {
+  // Search City Input Data State
+  const [searchCity, setSearchCity] = useState("");
+  // Search City onChange Handler
+  const searchCityHandler = (event) => {
+    const searchCityUpdated = event.target.value;
+    setSearchCity(searchCityUpdated);
+  };
+
+  // Access API Key from .env
+  const apiKey = process.env.REACT_APP_API_KEY;
+  // API URL & KEY
+  const weatherAPI = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${apiKey}`;
+  // API Data useState
+  const [apiData, setApiData] = useState(null);
+
+  // API Fetch
+  const fetchData = async () => {
+    try {
+      const response = await fetch(weatherAPI);
+      const jsonData = await response.json();
+      setApiData(jsonData);
+      console.log(jsonData, "jsonDataFetched");
+
+      if (!jsonData || jsonData.cod !== 200) {
+        console.log("No match found");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  // data to show details (switch)
+  const [getApiData, setGetApiData] = useState(false);
+  // data handler true false
+  const getApiDataHandler = (event) => {
+    event.preventDefault();
+    if (getApiData === false) {
+      setGetApiData(true);
+    } else {
+      setGetApiData(false);
+    }
+  };
+
+  useEffect(() => {
+    if (getApiData && searchCity) {
+      // eslint-disable-next-line
+      fetchData();
+    }
+    // eslint-disable-next-line
+  }, [getApiData, searchCity]);
+
   return (
-    <div className="bg-zinc-800 h-screen">
+    <div className="bg-gray-900/90 h-screen">
       <AppHeader />
-      <WorkFlow />
+      {/* <WorkFlow /> */}
 
-      <div className="mt-5">
-
-        {/* Display API Box */}
-        <div className="flex justify-center">
-          <label className="bg-zinc-700 rounded px-3 py-2 border-2 border-zinc-800 ">display api</label>
-        </div>
-
-        {/* Display CITY & TEMP text below */}
-        <div className="flex justify-center text-white font-mono text-xs mt-2 mb-10">
-         <p>display city</p><p>//---//</p><p>display temp here</p>
-        </div>
-
-        {/* CITY "text" Input Box */}
-        <div className="flex justify-center">
-          <input type="text" placeholder="city input here" />
-        </div>
-      </div> 
-
-    </div> //App DIV
+      <div className="mt-10">
+        <WeatherDisplay getApiData={getApiData} apiData={apiData} />
+        <CityInputBox onChange={searchCityHandler} />
+        <SearchCityButton onClick={getApiDataHandler} disabled={!searchCity} />
+      </div>
+    </div>
   );
 }
 
