@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import AppHeader from "./components/AppHeader";
+// eslint-disable-next-line
 import WorkFlow from "./components/WorkFlow"; // For Self Flow
+import SearchCityButton from "./components/SearchCityButton";
+import CityInputBox from "./components/CityInputBox";
+import WeatherDisplay from "./components/WeatherDisplay";
 
 function App() {
   // Search City Input Data State
@@ -49,56 +53,21 @@ function App() {
 
   useEffect(() => {
     if (getApiData && searchCity) {
+      // eslint-disable-next-line
       fetchData();
     }
+    // eslint-disable-next-line
   }, [getApiData, searchCity]);
 
   return (
-    <div className="bg-zinc-800 h-screen">
+    <div className="bg-gray-900/90 h-screen">
       <AppHeader />
       {/* <WorkFlow /> */}
 
       <div className="mt-10">
-        {/* Display Container for Search Result */}
-        <div className="text-center text-white font-mono text-xs bg-gray-700 mx-20 rounded-lg mt-5 py-20 mb-5">
-          {getApiData && apiData && apiData.cod === 200 && (
-            <div>
-              <div className="py-2 font-bold bg-gray-600 rounded-lg mx-10 mb-2">
-                <p>Weather for {apiData.name}</p>
-              </div>
-              <p>Temperature: {((apiData.main.temp)-273.15).toFixed(2)}°C </p>
-              <p>Weather: {apiData.weather[0].main}</p>
-              <p>Humidity: {apiData.main.humidity}</p>
-            </div>
-          )}
-          {getApiData && (!apiData || apiData.cod !== 200) && (
-            <div>
-              <p>No match found</p>
-            </div>
-          )}
-        </div>
-
-        {/* {CITY "text" Input Box} */}
-        <div className="flex justify-center">
-          <input
-            type="text"
-            onChange={searchCityHandler}
-            placeholder="ex: London"
-            className="rounded-md py-2 px-5"
-          />
-        </div>
-
-        {/* Search City Button */}
-        <div className="flex justify-center mt-5">
-          <button
-            onClick={getApiDataHandler}
-            className="py-2 px-4 bg-zinc-300 rounded"
-            disabled={!searchCity}
-          >
-            Search City
-          </button>
-        </div>
-
+        <WeatherDisplay getApiData={getApiData} apiData={apiData} />
+        <CityInputBox onChange={searchCityHandler} />
+        <SearchCityButton onClick={getApiDataHandler} disabled={!searchCity} />
       </div>
     </div>
   );
