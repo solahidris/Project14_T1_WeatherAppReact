@@ -1,37 +1,45 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import AppHeader from "./components/AppHeader";
-import WorkFlow from "./components/WorkFlow";
-import { useState } from "react";
+import WorkFlow from "./components/WorkFlow"; // For Self Flow
 
 function App() {
+  // Search City Input Data State
+  const [searchCity, setSearchCity] = useState("");
+  // Search City onChange Handler
+  const searchCityHandler = (event) => {
+    const searchCityUpdated = event.target.value;
+    setSearchCity(searchCityUpdated);
+  };
 
+  // Access API Key from .env
+  const apiKey = process.env.REACT_APP_API_KEY;
   // API URL & KEY
-  const weatherAPI = "http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=00141ae9f28c569a9dfeb43dae67a990";
-
+  const weatherAPI = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${apiKey}`;
   // API Data useState
-  const [apiData, setApiData] = useState("");
+  const [apiData, setApiData] = useState(null);
 
   // API Fetch
   const fetchData = async () => {
     try {
-    const response = await fetch(weatherAPI);
-    const jsonData = await response.json();
-    setApiData(jsonData);
-    console.log(jsonData);} catch (error) {
-      console.error('Error:', error);
+      const response = await fetch(weatherAPI);
+      const jsonData = await response.json();
+      setApiData(jsonData);
+      console.log(jsonData, "jsonDataFetched");
+
+      if (!jsonData || jsonData.cod !== 200) {
+        console.log("No match found");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
-
-  // Render API Fetch on Load
-  useEffect(()=>{
-    fetchData();
-  },[]);
 
   // data to show details (switch)
   const [getApiData, setGetApiData] = useState(false);
   // data handler true false
-  const getApiDataHandler = () => {
+  const getApiDataHandler = (event) => {
+    event.preventDefault();
     if (getApiData === false) {
       setGetApiData(true);
     } else {
@@ -39,51 +47,61 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    if (getApiData && searchCity) {
+      fetchData();
+    }
+  }, [getApiData, searchCity]);
+
   return (
-    <div className="bg-zinc-800 h-max">
+    <div className="bg-zinc-800 h-screen">
       <AppHeader />
-      <WorkFlow />
+      {/* <WorkFlow /> */}
 
-      <div className="mt-5">
-
-        {/* {Display API Box} */}
-        <div className="flex justify-center">
-          <label className="bg-zinc-700 rounded px-3 py-2 border-2 border-zinc-800 ">display api</label>
-        </div>
-        
-        {/* {Display CITY & TEMP text below} */}
-        <div className="flex justify-center text-white font-mono text-xs mt-2 mb-10">
-         <p>display city</p><p>display temp here</p>
+      <div className="mt-10">
+        {/* Display Container for Search Result */}
+        <div className="text-center text-white font-mono text-xs bg-gray-700 mx-20 rounded-lg mt-5 py-20 mb-5">
+          {getApiData && apiData && apiData.cod === 200 && (
+            <div>
+              <div className="py-2 font-bold bg-gray-600 rounded-lg mx-10 mb-2">
+                <p>Weather for {apiData.name}</p>
+              </div>
+              <p>Temperature: {((apiData.main.temp)-273.15).toFixed(2)}°C </p>
+              <p>Weather: {apiData.weather[0].main}</p>
+              <p>Humidity: {apiData.main.humidity}</p>
+            </div>
+          )}
+          {getApiData && (!apiData || apiData.cod !== 200) && (
+            <div>
+              <p>No match found</p>
+            </div>
+          )}
         </div>
 
         {/* {CITY "text" Input Box} */}
         <div className="flex justify-center">
-          <input type="text" placeholder="city input here" />
+          <input
+            type="text"
+            onChange={searchCityHandler}
+            placeholder="ex: London"
+            className="rounded-md py-2 px-5"
+          />
         </div>
 
+        {/* Search City Button */}
         <div className="flex justify-center mt-5">
-          <button onClick={getApiDataHandler} className="py-2 px-4 bg-zinc-300 rounded">set to true to fetch</button>
-          <label className="py-1 px-3 bg-red-300">getApiData value = {getApiData.toString()}</label>
-          {getApiData === true && <p className="py-1 px-3 bg-sky-300">{apiData.city.name}</p>}
+          <button
+            onClick={getApiDataHandler}
+            className="py-2 px-4 bg-zinc-300 rounded"
+            disabled={!searchCity}
+          >
+            Search City
+          </button>
         </div>
 
-        <div className="ml-10 mt-10 text-white">
-          <p>https://openweathermap.org/history-bulk</p>
-          <p>https://openweathermap.org/weather-dashboard</p>
-          <p>https://agromonitoring.com/dashboard</p>
-          <p>---</p>
-          <p>Your API key is 00141ae9f28c569a9dfeb43dae67a990</p>
-          <p>endpoint api.openweathermap.org for your API calls</p>
-          <p>- Example of API call:
-api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=00141ae9f28c569a9dfeb43dae67a990</p>
-          <p>- API documentation https://openweathermap.org/api</p>
-          <p>- Details of your plan https://openweathermap.org/price</p>
-        </div>
-
-      </div> 
-
+      </div>
     </div>
-  )
-};
+  );
+}
 
 export default App;
