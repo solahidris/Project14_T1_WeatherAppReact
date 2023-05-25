@@ -10,7 +10,7 @@ function App() {
   const weatherAPI = "http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=00141ae9f28c569a9dfeb43dae67a990";
 
   // API Data useState
-  const [apiData, setApiData] = useState(null);
+  const [apiData, setApiData] = useState("");
 
   // API Fetch
   const fetchData = async () => {
@@ -19,7 +19,7 @@ function App() {
     const jsonData = await response.json();
     setApiData(jsonData);
     console.log(jsonData);} catch (error) {
-      console.error("Error: ", error);
+      console.error('Error:', error);
     }
   };
 
@@ -28,9 +28,19 @@ function App() {
     fetchData();
   },[]);
 
+  // data to show details (switch)
+  const [getApiData, setGetApiData] = useState(false);
+  // data handler true false
+  const getApiDataHandler = () => {
+    if (getApiData === false) {
+      setGetApiData(true);
+    } else {
+      setGetApiData(false);
+    }
+  };
 
   return (
-    <div className="bg-zinc-800 h-screen">
+    <div className="bg-zinc-800 h-max">
       <AppHeader />
       <WorkFlow />
 
@@ -51,10 +61,10 @@ function App() {
           <input type="text" placeholder="city input here" />
         </div>
 
-        <div>
-          
-          {/* <p>{data.city.name}</p> */}
-          {/* <p>{data.city.country}</p> */}
+        <div className="flex justify-center mt-5">
+          <button onClick={getApiDataHandler} className="py-2 px-4 bg-zinc-300 rounded">set to true to fetch</button>
+          <label className="py-1 px-3 bg-red-300">getApiData value = {getApiData.toString()}</label>
+          {getApiData === true && <p className="py-1 px-3 bg-sky-300">{apiData.city.name}</p>}
         </div>
 
         <div className="ml-10 mt-10 text-white">
