@@ -3,7 +3,7 @@ import React from "react";
 
 const AppHeader = () => {
   return (
-    <div className="text-center text-white font-mono text-xs px-20 pt-10">
+    <div className="text-center text-white font-mono text-xs px-20 lg:px-[30%] pt-10">
       <div className="flex justify-center">
         <img src={logo} className="animate-bounce h-20" alt="logo" />
       </div>
