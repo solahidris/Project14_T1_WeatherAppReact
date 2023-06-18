@@ -60,7 +60,7 @@ function App() {
   }, [getApiData, searchCity]);
 
   return (
-    <div className="bg-gray-900/90 h-screen">
+    <div className="bg-gradient-to-b from-sky-300 to-sky-950 h-screen">
       <AppHeader />
       {/* <WorkFlow /> */}
 
